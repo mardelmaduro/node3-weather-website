@@ -1,0 +1,74 @@
+body {
+    color : #333333;
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 0 16px;
+    text-align: center;
+
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content{
+    flex-grow: 1;
+}
+
+footer {
+    color : #888888;
+    border-top : 1px solid #eeeeee;
+    margin-top : 16px;
+    padding: 16px 0;
+}
+
+header {
+    margin-top : 16px;
+    margin-bottom : 48px;
+}
+
+h1 {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+header a {
+    color: 888888;
+    margin-right: 16px;
+    text-decoration: none;
+}
+
+.portrait{
+    width: 250px;
+}
+
+#conditionsIcon
+{
+    width: 25%;
+    border-radius: 10px;
+}
+
+input{
+    border: 1px solid #cccccc;
+    padding:8px;
+    border-radius: 8px;
+}
+
+button{
+    cursor: pointer;
+    border: 1px solid #888888;
+    border-radius: 6px;
+    background: #888888;
+    color: white;
+    padding: 8px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+button:hover
+{
+    background: white;
+    color: #888888;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+
