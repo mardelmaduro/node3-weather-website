@@ -6,27 +6,29 @@ const apiKey = '9ccec11754969db5aea54915fff5d365';
 const forecast = (latitude,longitude, callback) =>
 {
 const apiKey = '9ccec11754969db5aea54915fff5d365';
-    const weatherAPIUrl = 'http://api.weatherstack.com/current?access_key='+apiKey+'&query='+latitude+','+longitude;
+    const weatherAPIUrl = 'http://api.weatherstack.com/current?access_key='+apiKey+'&query='+latitude+','+longitude+'&units=m';
 
-    request({url: weatherAPIUrl, json: true}, (error,reponse) => 
+    request({url: weatherAPIUrl, json: true}, (error,response) => 
     {
         if(error)
         {
             callback('Unable to conenction to weather services!', undefined);
         }
-        else if (reponse.body.error)
+        else if (response.body.error)
         {   
-            callback('Error : '+reponse.body.error.info,undefined);
+            callback('Error : '+response.body.error.info,undefined);
         }
         else
         {
             callback(undefined, 
                 {
-                    conditions: reponse.body.current.weather_descriptions,
-                    temperature : reponse.body.current.temperature,
-                    feelslike : reponse.body.current.feelslike,
-                    precipitation : reponse.body.current.precip,
-                    icons : reponse.body.current.weather_icons
+                    conditions: response.body.current.weather_descriptions,
+                    temperature : response.body.current.temperature,
+                    feelslike : response.body.current.feelslike,
+                    precipitation : response.body.current.precip,
+                    icons : response.body.current.weather_icons,
+                    windSpeed : response.body.current.wind_speed,
+                    windDirection : response.body.current.wind_dir
                 });
         }
     });
