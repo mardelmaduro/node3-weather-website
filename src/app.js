@@ -4,6 +4,7 @@ const hbs = require('hbs');
 
 const geocode = require('./utils/geocode');
 const forecast = require('./utils/forecast');
+const forecastGiphy = require('./utils/giphy');
 const { response } = require('express');
 
 
@@ -29,6 +30,51 @@ hbs.registerPartials(partialsPath);
 //Setup static files for use in Express
 app.use(express.static(publicDir));
 
+
+//Helper Functions
+
+const relayConditions = (conditions = '') => 
+{
+    var relay;
+
+    conditions = conditions.replace('at times', '');
+    conditions = conditions.replace('patchy', '');
+    conditions = conditions.replace('possible', '');
+    conditions = conditions.replace('outbreaks', '');
+    conditions = conditions.replace('In Vicinity', '');
+    conditions = conditions.replace('Shower','rain');
+
+
+    // if (conditions.includes('hot') && conditions.includes('humid') )
+    // {
+    //     relay = '';
+    // }
+    // else if (conditions.includes('hot') && conditions.includes('arid') )
+    // {
+    //     relay = '';
+    // }
+    // else 
+    if (((conditions.includes('rain') || conditions.includes('drizzle') || conditions.includes('wet')) && conditions.includes('wind') ))
+    {
+        //conditions = conditions.replace('rain','');
+        //conditions = conditions.replace('drizzle','');
+        //conditions = conditions.replace('wet','');
+        //conditions = conditions.replace('wind','');
+        conditions = 'stormy';
+    }
+
+    if(conditions == 'Clear day')
+    {
+        conditions = 'beautiful day';
+    }
+
+    if(conditions == 'Overcast day')
+    {
+        conditions = 'gray clouds';
+    }
+    
+    return conditions;
+};
 
 
 app.get('', (req,res) => 
@@ -68,7 +114,7 @@ app.get('/weather',(req,res) =>
         //latitude: '',
         //longitude: '',
         address: '',
-        
+        giphyLink: ''
     };
 
    
@@ -105,7 +151,77 @@ app.get('/weather',(req,res) =>
     
                 weatherObject.location = location;
                 weatherObject.forecast = forecastData;
-                res.send(weatherObject);
+
+                var additionalContext = '';
+
+                if(forecastData.temperature > 30)
+                {
+                    additionalContext +='hot'
+                    if(forecastData.humidity > 80)
+                    {
+                        additionalContext +=',humid'
+                    } 
+                    if(forecastData.humidity < 10)
+                    {
+                        additionalContext +=',dry'
+                    } 
+                }
+
+                else if(forecastData.temperature < -10)
+                {
+                    additionalContext +='cold'
+                }
+
+                if(forecastData.windSpeed > 20)
+                {
+                    additionalContext +='windy'
+                }
+                if(forecastData.precipitation > 5)
+                {
+                    additionalContext +='wet'
+                }
+
+                var giphyForcastSearchTerm = '';
+
+                if(weatherObject.forecast.conditions.includes('Sunny') || weatherObject.forecast.conditions.includes('Clear') || weatherObject.forecast.conditions.includes('Partly Cloudy'))
+                {
+                    if( additionalContext != '')
+                    {
+                        giphyForcastSearchTerm = additionalContext+' day';
+                    }
+                    else
+                    {
+                        giphyForcastSearchTerm = weatherObject.forecast.conditions+' day';
+                    }
+                    
+                }
+                
+                else {
+                    if(additionalContext != '')
+                    {
+                        giphyForcastSearchTerm = additionalContext+' and '+weatherObject.forecast.conditions+' day';
+                    }
+                    else
+                    {
+                        giphyForcastSearchTerm = weatherObject.forecast.conditions+' day';  
+                    }
+                }
+
+                console.log(relayConditions(giphyForcastSearchTerm));
+
+
+                 forecastGiphy(relayConditions(giphyForcastSearchTerm),(giphyLink) => {
+                    if (error) {
+                        return res.send(
+                            {
+                                error: error
+                            });
+                    }
+                     weatherObject.giphyLink = giphyLink;
+                     res.send(weatherObject);
+                 });
+                
+                
 
                 //console.log(forecastData)
             });

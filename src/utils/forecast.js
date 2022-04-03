@@ -26,6 +26,7 @@ const apiKey = '9ccec11754969db5aea54915fff5d365';
                     temperature : response.body.current.temperature,
                     feelslike : response.body.current.feelslike,
                     precipitation : response.body.current.precip,
+                    humidity : response.body.current.humidity,
                     icons : response.body.current.weather_icons,
                     windSpeed : response.body.current.wind_speed,
                     windDirection : response.body.current.wind_dir

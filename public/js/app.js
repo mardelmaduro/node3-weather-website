@@ -40,8 +40,10 @@ weatherForm.addEventListener('submit', (e) =>
 
         forecastText.innerHTML += '<br> There is currently '+data.forecast.precipitation+'mm of precipitation ';
         forecastText.innerHTML += 'with '+data.forecast.windSpeed+' kmph winds coming in from the '+data.forecast.windDirection;
+        //forecastText.innerHTML += data.giphyLink;
 
-        conditionsIcon.src = data.forecast.icons[0];
+        //conditionsIcon.src = data.forecast.icons[0];
+        conditionsIcon.src = data.giphyLink;
 
         }
     });
